@@ -1,0 +1,20 @@
+{
+  "name": "nimbustest",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=0.6.6",
+    "npm": ">=1.1"
+  },
+  "dependencies": {
+    "express": "3.0.0beta3"
+  },
+  "devDependencies": {
+
+  },
+  "scripts": {
+    "start": "foreman"
+  },
+  "publicConfig": {
+    "hello": "default"
+  }
+}

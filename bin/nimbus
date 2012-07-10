@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var _ = require('underscore')._;
+var pkg = require('../package.json');
+var Nimbus = require('../lib');
+
+program.name = 'nimbus';
+
+program
+  .version(pkg.version);
+
+program
+  .command('list')
+  .description('list deployment targets')
+  .action(runList);
+
+program
+  .command('provision')
+  .description('provision a deployment target')
+  .option('-t, --target [name]', 'specify the target, eg: prod_web1')
+  .action(runProvision);
+
+program
+  .command('deploy')
+  .description('deploy to a target')
+  .option('-t, --target [name]', 'specify the target, eg: prod_web1')
+  .option('-b, --branch [name]', 'specify the branch [master]', 'master')
+  .option('-c, --commit [hash]', 'specify the commit hash')
+  .action(runDeploy);
+
+if (process.argv.length < 3) {
+  return runHelp();
+}
+
+var nimbus = new Nimbus({
+  path: process.cwd()
+});
+
+program.parse(process.argv);
+
+function runList(options) {
+  _.each(nimbus.list(), function(item) { console.log(item); });
+}
+
+function runProvision(options) {
+  if (!options.target) {
+    return console.warn("Target must be specified (-t, --target)");
+  }
+  nimbus.provision(options.target, complete);
+}
+
+function runDeploy(options) {
+  if (!options.target) {
+    return console.warn("Target must be specified (-t, --target)");
+  }
+  nimbus.deploy(options.target, complete);
+}
+
+function complete(err) {
+  console.log("done.");
+}
+
+function runHelp(options) {
+  console.log(program.helpInformation());
+}
