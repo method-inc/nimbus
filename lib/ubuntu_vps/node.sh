@@ -64,6 +64,7 @@ fi
 echo "creating repo, slugs, and live directories..."
 
 # create our git repository
+rm -rf /home/{{serviceName}}/repo
 mkdir -p /home/{{serviceName}}/repo
 
 # create our version storage
@@ -103,13 +104,20 @@ EOF
 
 # create a post-receive hook for pushes to our repository
 cd /home/{{serviceName}}/repo
-git init
+git init --bare
 cat <<'EOF' > hooks/post-receive
 while read oldrev newrev refname
 do
-  echo $oldrev $newrev $refname
+  action="git: receiving $refname, rev. $oldrev => $newrev"
+  echo $action
+  echo $action >> /home/{{serviceName}}/{{serviceName.log}}
+  mkdir -p /home/{{serviceName}}/slugs/$newrev
+  GIT_WORK_TREE=/home/{{serviceName}}/slugs/$newrev git checkout -f
+  cd /home/{{serviceName}}/slugs/$newrev
+  npm install
 done
 EOF
+chmod +x hooks/post-receive
 
 # TODO: create a post-receive hook that will accept pushes to /repo,
 # run npm install, copy the directory to /slugs under its commit hash,
