@@ -108,6 +108,7 @@ git init --bare
 cat <<'EOF' > hooks/post-receive
 while read oldrev newrev refname
 do
+  . /home/{{serviceName}}/.profile
   action="git: receiving $refname, rev. $oldrev => $newrev"
   echo $action
   echo $action >> /home/{{serviceName}}/{{serviceName.log}}
