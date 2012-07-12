@@ -64,11 +64,6 @@ mkdir -p /home/{{serviceName}}/slugs
 # create our live app directory
 mkdir -p /home/{{serviceName}}/live
 
-# TODO: make this start with the right uid and gid
-# setuid {{serviceName}}
-# setgid {{serviceName}}
-# (has trouble running sudo etc, figure out later)
-
 # create the node service and upstart scripts
 echo "creating upstart service..."
 cat <<'EOF' > /etc/init/{{serviceName}}.conf
@@ -118,6 +113,11 @@ do
 done
 EOF
 chmod +x hooks/post-receive
+
+# create a local nimbus.json config
+cat <<'EOF' > /home/{{serviceName}}/nimbus.json
+{{ nimbusJSON }}
+EOF
 
 # own home
 chown -R {{serviceName}}:{{serviceName}} /home/{{serviceName}}/

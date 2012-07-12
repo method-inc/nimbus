@@ -30,6 +30,13 @@ What the user does:
     - local: copy rendered scripts to the remote machine
     - serviceuser: run the remote scripts
 
+  $ nimbus update `serviceName`
+
+    updates the service at `serviceName`
+    (for example, updating config files, environment settings...)
+    (should be non-destructive... no risk of losing user data)
+    (should be fast & not require a restart)
+
   $ nimbus deploy `serviceName` [branch|hash]
 
     deploys the git branch or hash specified to `serviceName`
