@@ -73,6 +73,7 @@ echo "building /home/{{serviceName}}/mongodb.conf..."
 cat <<'EOF' > /home/{{serviceName}}/mongodb.conf
 logappend=true
 dbpath=/home/{{serviceName}}/db
+bind_ip = {{bindIP}}
 oplogSize = 10000
 journal = true
 logpath=/home/{{serviceName}}/mongodb.log

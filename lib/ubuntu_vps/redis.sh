@@ -63,7 +63,7 @@ pidfile /home/{{serviceName}}/redis.pid
 logfile /home/{{serviceName}}/redis.log
 
 port {{port}}
-bind {{bindAddress}}
+bind {{bindIP}}
 timeout 300
 
 loglevel notice
