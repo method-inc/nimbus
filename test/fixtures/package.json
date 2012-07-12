@@ -1,6 +1,6 @@
 {
   "name": "nimbustest",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "engines": {
     "node": ">=0.6.6",
     "npm": ">=1.1"
@@ -12,7 +12,7 @@
 
   },
   "scripts": {
-    "start": "foreman"
+    "start": "node app"
   },
   "publicConfig": {
     "hello": "default"

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # setup a user
 echo "creating user {{serviceName}} for node service..."
 useradd -U -s /bin/bash -m {{serviceName}}
@@ -27,16 +29,6 @@ mkdir -p /home/{{serviceName}}/local
 
 # use our locally installed node binary
 cat <<EOF > /home/{{serviceName}}/.profile
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-  . "$HOME/.bashrc"
-    fi
-fi
-
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
 export PATH=/home/{{serviceName}}/local/bin:$PATH
 EOF
 
@@ -57,7 +49,6 @@ then
   cd node-v{{nodeVersion}}
   export JOBS=4
   ./configure --prefix=/home/{{serviceName}}/local
-  make
   make install
 fi
 
@@ -73,6 +64,11 @@ mkdir -p /home/{{serviceName}}/slugs
 # create our live app directory
 mkdir -p /home/{{serviceName}}/live
 
+# TODO: make this start with the right uid and gid
+# setuid {{serviceName}}
+# setgid {{serviceName}}
+# (has trouble running sudo etc, figure out later)
+
 # create the node service and upstart scripts
 echo "creating upstart service..."
 cat <<'EOF' > /etc/init/{{serviceName}}.conf
@@ -85,12 +81,9 @@ respawn
 respawn limit 10 5
 umask 022
 
-setuid {{serviceName}}
-setgid {{serviceName}}
-
 pre-start script
   # if there is no live package.json, then we have nothing to start
-  if ! -e "/home/{{serviceName}}/live/package.json" ; then
+  if [ ! -e "/home/{{serviceName}}/live/package.json" ] ; then
     echo "can't start {{serviceName}}: /home/{{serviceName}}/live/package.json doesn't exist" >> /home/{{serviceName}}/{{serviceName}}.log
     stop ; exit 0
   fi
@@ -98,11 +91,13 @@ end script
 
 script
   . /home/{{serviceName}}/.profile
+  cd /home/{{serviceName}}/live
   npm start >> /home/{{serviceName}}/{{serviceName}}.log 2>&1
 end script
 EOF
 
 # create a post-receive hook for pushes to our repository
+# repo -> slugs -> live
 cd /home/{{serviceName}}/repo
 git init --bare
 cat <<'EOF' > hooks/post-receive
@@ -111,18 +106,23 @@ do
   . /home/{{serviceName}}/.profile
   action="git: receiving $refname, rev. $oldrev => $newrev"
   echo $action
-  echo $action >> /home/{{serviceName}}/{{serviceName.log}}
+  echo $action >> /home/{{serviceName}}/{{serviceName}}.log
   mkdir -p /home/{{serviceName}}/slugs/$newrev
   GIT_WORK_TREE=/home/{{serviceName}}/slugs/$newrev git checkout -f
   cd /home/{{serviceName}}/slugs/$newrev
   npm install
+  echo "deploying commit $newrev"
+  cp -rf /home/{{serviceName}}/slugs/$newrev/* /home/{{serviceName}}/live
+  sudo stop {{serviceName}}
+  sudo start {{serviceName}}
 done
 EOF
 chmod +x hooks/post-receive
 
-# TODO: create a post-receive hook that will accept pushes to /repo,
-# run npm install, copy the directory to /slugs under its commit hash,
-# then copy /slugs/#commit to /live, then restart the node service
-
 # own home
 chown -R {{serviceName}}:{{serviceName}} /home/{{serviceName}}/
+
+# restart the machine
+echo "provisioning complete, restarting..."
+shutdown -r now
+
