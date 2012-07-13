@@ -104,7 +104,9 @@ echo $action >> /home/{{serviceName}}/{{serviceName}}.log
 mkdir -p /home/{{serviceName}}/slugs/$newrev
 GIT_WORK_TREE=/home/{{serviceName}}/slugs/$newrev git checkout -f
 cd /home/{{serviceName}}/slugs/$newrev
-GIT_DIR= npm install
+unset GIT_DIR
+unset GIT_WORK_TREE
+npm install
 echo "deploying commit $newrev"
 rm -rf /home/{{serviceName}}/live
 mkdir /home/{{serviceName}}/live
