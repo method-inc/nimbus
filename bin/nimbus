@@ -32,7 +32,7 @@ program
   .command('remote')
   .description('remote into a target')
   .option('-t, --target [name]', 'specify the target, eg: prod_web1')
-  .action(runSSH);
+  .action(runRemote);
 
 if (process.argv.length < 3) {
   return runHelp();
