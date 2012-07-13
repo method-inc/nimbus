@@ -96,21 +96,24 @@ EOF
 cd /home/{{serviceName}}/repo
 git init --bare
 cat <<'EOF' > hooks/post-receive
-while read oldrev newrev refname
-do
-  . /home/{{serviceName}}/.profile
-  action="git: receiving $refname, rev. $oldrev => $newrev"
-  echo $action
-  echo $action >> /home/{{serviceName}}/{{serviceName}}.log
-  mkdir -p /home/{{serviceName}}/slugs/$newrev
-  GIT_WORK_TREE=/home/{{serviceName}}/slugs/$newrev git checkout -f
-  cd /home/{{serviceName}}/slugs/$newrev
-  npm install
-  echo "deploying commit $newrev"
-  cp -rf /home/{{serviceName}}/slugs/$newrev/* /home/{{serviceName}}/live
-  sudo stop {{serviceName}}
-  sudo start {{serviceName}}
-done
+read oldrev newrev refname
+. /home/{{serviceName}}/.profile
+action="git: receiving $refname, rev. $oldrev => $newrev"
+echo $action
+echo $action >> /home/{{serviceName}}/{{serviceName}}.log
+mkdir -p /home/{{serviceName}}/slugs/$newrev
+GIT_WORK_TREE=/home/{{serviceName}}/slugs/$newrev git checkout -f
+cd /home/{{serviceName}}/slugs/$newrev
+echo "ENV"
+env
+echo "END ENV"
+npm install
+echo "deploying commit $newrev"
+rm -rf /home/{{serviceName}}/live
+mkdir /home/{{serviceName}}/live
+cp -r /home/{{serviceName}}/slugs/$newrev/* /home/{{serviceName}}/live
+sudo stop {{serviceName}}
+sudo start {{serviceName}}
 EOF
 chmod +x hooks/post-receive
 

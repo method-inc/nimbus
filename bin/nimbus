@@ -25,8 +25,7 @@ program
   .command('deploy')
   .description('deploy to a target')
   .option('-t, --target [name]', 'specify the target, eg: prod_web1')
-  .option('-b, --branch [name]', 'specify the branch [master]', 'master')
-  .option('-c, --commit [hash]', 'specify the commit hash')
+  .option('-r, --ref [branch or commit-ish]', 'specify which git ref to push [master]', 'master')
   .action(runDeploy);
 
 if (process.argv.length < 3) {

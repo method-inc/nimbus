@@ -17,6 +17,7 @@ apt-get upgrade --yes
 apt-get install --yes build-essential git-core libssl-dev curl
 apt-get install --yes python-setuptools sendmail upstart python-software-properties
 apt-get install --yes imagemagick libmagickcore-dev libmagickwand-dev
+apt-get install --yes graphicsmagick libgraphicsmagick1-dev
 
 echo "configuring static IP..."
 cat <<'EOF' > /etc/network/interfaces
