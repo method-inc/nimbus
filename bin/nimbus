@@ -53,7 +53,7 @@ function runDeploy(options) {
   if (!options.target) {
     return console.warn("Target must be specified (-t, --target)");
   }
-  nimbus.deploy(options.target, complete);
+  nimbus.deploy(options.target, options.ref, complete);
 }
 
 function complete(err) {
