@@ -28,6 +28,12 @@ program
   .option('-r, --ref [branch or commit-ish]', 'specify which git ref to push [master]', 'master')
   .action(runDeploy);
 
+program
+  .command('remote')
+  .description('remote into a target')
+  .option('-t, --target [name]', 'specify the target, eg: prod_web1')
+  .action(runSSH);
+
 if (process.argv.length < 3) {
   return runHelp();
 }
@@ -42,18 +48,25 @@ function runList(options) {
   _.each(nimbus.list(), function(item) { console.log(item); });
 }
 
-function runProvision(options) {
+function requireTarget(options) {
   if (!options.target) {
-    return console.warn("Target must be specified (-t, --target)");
+    throw new Error("Target must be specified (-t, --target)");
   }
+}
+
+function runProvision(options) {
+  requireTarget(options);
   nimbus.provision(options.target, complete);
 }
 
 function runDeploy(options) {
-  if (!options.target) {
-    return console.warn("Target must be specified (-t, --target)");
-  }
+  requireTarget(options);
   nimbus.deploy(options.target, options.ref, complete);
+}
+
+function runRemote(options) {
+  requireTarget(options);
+  nimbus.remote(options.target, complete);
 }
 
 function complete(err) {
