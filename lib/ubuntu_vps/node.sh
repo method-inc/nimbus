@@ -55,7 +55,11 @@ fi
 echo "creating repo, slugs, and live directories..."
 
 # create our git repository
+
+<% if (!obj.updateOnly) { %>
 rm -rf /home/{{serviceName}}/repo
+<% } %>
+
 mkdir -p /home/{{serviceName}}/repo
 
 # create our version storage
@@ -124,7 +128,15 @@ EOF
 # own home
 chown -R {{serviceName}}:{{serviceName}} /home/{{serviceName}}/
 
-# restart the machine
-echo "provisioning complete, restarting..."
+# restart the machine or service
+
+<% if (obj.updateOnly) { %>
+echo "provisioning complete, restarting node service..."
+stop {{serviceName}}
+start {{serviceName}}
+<% } else { %>
+echo "provisioning complete, restarting host..."
 shutdown -r now
+<% } %>
+
 

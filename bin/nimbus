@@ -19,6 +19,7 @@ program
   .command('provision')
   .description('provision a deployment target')
   .option('-t, --target [name]', 'specify the target, eg: prod_web1')
+  .option('-u, --update', 'update-only, no destructive changes, no restart')
   .action(runProvision);
 
 program
@@ -56,7 +57,7 @@ function requireTarget(options) {
 
 function runProvision(options) {
   requireTarget(options);
-  nimbus.provision(options.target, complete);
+  nimbus.provision(options, complete);
 }
 
 function runDeploy(options) {
