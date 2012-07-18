@@ -18,7 +18,14 @@ apt-get install --yes build-essential git-core libssl-dev curl
 apt-get install --yes python-setuptools sendmail upstart python-software-properties
 apt-get install --yes imagemagick libmagickcore-dev libmagickwand-dev
 apt-get install --yes graphicsmagick libgraphicsmagick1-dev
+apt-get install --yes ntpdate
 
+echo "updating system clock for UTC..."
+echo 'UTC' > /etc/timezone
+cp /usr/share/zoneinfo/'UTC' /etc/localtime
+ntpdate pool.ntp.org
+
+<% if (!obj.updateOnly) { %>
 echo "configuring static IP..."
 cat <<'EOF' > /etc/network/interfaces
 # The loopback interface
@@ -45,3 +52,4 @@ address {{privateIP}}
 netmask 255.255.128.0
 <% } %>
 EOF
+<% } %>

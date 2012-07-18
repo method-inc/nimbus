@@ -98,6 +98,12 @@ EOF
 # own home
 chown -R {{serviceName}}:{{serviceName}} /home/{{serviceName}}/
 
-# restart the machine
-echo "provisioning complete, restarting..."
+# restart service or machine
+<% if (obj.updateOnly) { %>
+echo "provisioning complete, restarting redis service..."
+stop {{serviceName}}
+start {{serviceName}}
+<% } else { %>
+echo "provisioning complete, restarting host..."
 shutdown -r now
+<% } %>
