@@ -90,7 +90,7 @@ cat <<'EOF' > /etc/init/{{serviceName}}.conf
 start on runlevel [23]
 stop on shutdown
 
-exec /usr/local/bin/redis-server /home/{{serviceName}}/redis.conf
+exec /home/{{serviceName}}/local/bin/redis-server /home/{{serviceName}}/redis.conf
 
 respawn
 EOF
