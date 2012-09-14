@@ -23,7 +23,7 @@ apt-get install --yes ntpdate
 echo "updating system clock for UTC..."
 echo 'UTC' > /etc/timezone
 cp /usr/share/zoneinfo/'UTC' /etc/localtime
-ntpdate pool.ntp.org
+ntpdate pool.ntp.org &2>1
 
 <% if (!obj.updateOnly) { %>
 echo "configuring static IP..."

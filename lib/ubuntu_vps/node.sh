@@ -97,6 +97,7 @@ EOF
 
 # create a post-receive hook for pushes to our repository
 # repo -> slugs -> live
+echo "Creating git post-receive hook..."
 cd /home/{{serviceName}}/repo
 git init --bare
 cat <<'EOF' > hooks/post-receive
@@ -121,6 +122,7 @@ EOF
 chmod +x hooks/post-receive
 
 # create a local nimbus.json config
+echo "Creating nimbus.json config file..."
 cat <<'EOF' > /home/{{serviceName}}/nimbus.json
 {{ nimbusJSON }}
 EOF
