@@ -109,7 +109,8 @@ echo $action >> /home/{{serviceName}}/{{serviceName}}.log
 mkdir -p /home/{{serviceName}}/slugs/$newrev
 GIT_WORK_TREE=/home/{{serviceName}}/slugs/$newrev git checkout -f
 cd /home/{{serviceName}}/slugs/$newrev
-if [ ! -d "/home/{{serviceName}}/live/node_modules" ]; then
+if [ -d "/home/{{serviceName}}/live/node_modules" ]; then
+  mkdir -p node_modules
   cp -r /home/{{serviceName}}/live/node_modules/* node_modules
 fi
 unset GIT_DIR
