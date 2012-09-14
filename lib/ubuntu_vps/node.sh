@@ -126,8 +126,8 @@ EOF
 chmod +x hooks/post-receive
 
 # create a local nimbus.json config
-echo "Creating nimbus.json config file..."
-cat <<'EOF' > /home/{{serviceName}}/nimbus.json
+echo "Creating local.config.json config file..."
+cat <<'EOF' > /home/{{serviceName}}/local.config.json
 {{ nimbusJSON }}
 EOF
 

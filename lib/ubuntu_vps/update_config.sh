@@ -2,9 +2,9 @@
 echo "adding authorized keys for {{serviceName}}..."
 echo "{{authorizedKeys}}" > /home/{{serviceName}}/.ssh/authorized_keys
 
-# create a local nimbus.json config
-echo "Creating nimbus.json config file..."
-cat <<'EOF' > /home/{{serviceName}}/nimbus.json
+# create a local config on remote
+echo "Creating local.config.json config file..."
+cat <<'EOF' > /home/{{serviceName}}/local.config.json
 {{ nimbusJSON }}
 EOF
 
