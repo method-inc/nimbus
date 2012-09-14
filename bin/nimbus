@@ -30,6 +30,12 @@ program
   .action(runDeploy);
 
 program
+  .command('config')
+  .description('update remote nimbus.json and restart the service')
+  .option('-t, --target [name]', 'specify the target, eg: prod_web1')
+  .action(runConfig);
+
+program
   .command('remote')
   .description('remote into a target')
   .option('-t, --target [name]', 'specify the target, eg: prod_web1')
@@ -68,6 +74,11 @@ function runDeploy(options) {
 function runRemote(options) {
   requireTarget(options);
   nimbus.remote(options.target, complete);
+}
+
+function runConfig(options) {
+  requireTarget(options);
+  nimbus.update_config(options.target, complete);
 }
 
 function complete(err) {
