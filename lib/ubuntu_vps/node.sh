@@ -111,7 +111,7 @@ GIT_WORK_TREE=/home/{{serviceName}}/slugs/$newrev git checkout -f
 cd /home/{{serviceName}}/slugs/$newrev
 if [ -d "/home/{{serviceName}}/live/node_modules" ]; then
   mkdir -p node_modules
-  cp -r /home/{{serviceName}}/live/node_modules/* node_modules
+  mv -r /home/{{serviceName}}/live/node_modules/* node_modules
 fi
 unset GIT_DIR
 unset GIT_WORK_TREE
