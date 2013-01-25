@@ -1,6 +1,6 @@
 {
   "name": "nimbus",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "simple cloud deployment for node apps, follows convention, no lock-in",
   "keywords": ["cloud", "express", "deployment", "provision", "linode", "heroku", "joyent"],
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
